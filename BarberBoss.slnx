@@ -1,0 +1,6 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/BarberBoss.API/BarberBoss.API.csproj" />
+  </Folder>
+  <Folder Name="/tests/" />
+</Solution>
