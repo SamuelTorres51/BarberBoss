@@ -1,6 +1,6 @@
 ﻿
 using BarberBoss.Application.AutoMapper;
-using BarberBoss.Application.UseCases.Billing.Register;
+using BarberBoss.Application.UseCases.Billings.Register;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace BarberBoss.Application;

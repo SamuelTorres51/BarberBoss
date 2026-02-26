@@ -1,7 +1,7 @@
 ﻿using BarberBoss.Communication.Requests;
 using FluentValidation;
 
-namespace BarberBoss.Application.UseCases.Billing;
+namespace BarberBoss.Application.UseCases.Billings;
 
 public class BillingValidator : AbstractValidator<RequestBillingJson>{
     public BillingValidator() {

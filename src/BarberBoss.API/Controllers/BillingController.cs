@@ -1,4 +1,4 @@
-﻿using BarberBoss.Application.UseCases.Billing.Register;
+﻿using BarberBoss.Application.UseCases.Billings.Register;
 using BarberBoss.Communication.Requests;
 using BarberBoss.Communication.Responses;
 using Microsoft.AspNetCore.Mvc;
@@ -14,6 +14,9 @@ public class BillingController : ControllerBase {
     [ProducesResponseType(ResponseErrorsJson, StatusCodes.Status400BadRequest)]
     
     public async Task<IActionResult> Register([FromServices] IRegisterBillingUseCase useCase,[FromBody] RequestBillingJson request) {
-
+        try {
+            var response = await useCase.Execute(request);
+            return Created()
+        }
     }
 }
