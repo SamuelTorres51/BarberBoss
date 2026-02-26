@@ -7,4 +7,8 @@ public class RegisterBillingUseCase : IRegisterBillingUseCase {
     public Task<ResponseRegistedBillingJson> Execute(RequestBillingJson request) {
         
     }
+
+    private void Validate(RequestBillingJson request) {
+
+    }
 }
