@@ -18,4 +18,12 @@ internal class BillingRepository : IBillingWriteOnlyRepository, IBillingReadOnly
     public async Task<List<Billing>> GetAll() {
         return await _dbContext.Billings.AsNoTracking().ToListAsync();
     }
+
+    async Task<Billing?> IBillingReadOnlyRepository.GetById(long id) {
+        return await _dbContext.Billings.AsNoTracking().FirstOrDefaultAsync(b => b.Id == id);
+    }
+
+    async Task<Billing?> IBillingWriteOnlyRepository.GetById(long id) {
+        return await _dbContext.Billings.FirstOrDefaultAsync(b => b.Id == id);
+    }
 }

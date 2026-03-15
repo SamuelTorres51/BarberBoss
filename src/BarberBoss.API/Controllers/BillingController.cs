@@ -1,4 +1,5 @@
 ﻿using BarberBoss.Application.UseCases.Billings.GetAll;
+using BarberBoss.Application.UseCases.Billings.GetById;
 using BarberBoss.Application.UseCases.Billings.Register;
 using BarberBoss.Communication.Requests;
 using BarberBoss.Communication.Responses;
@@ -33,6 +34,19 @@ public class BillingController : ControllerBase {
     public async Task<IActionResult> GetAll([FromServices] IGetAllBillingsUseCase useCase) {
         var response = await useCase.Execute();
         if(response.Billings.Count > 0) {
+            return Ok(response);
+        }
+        return NotFound();
+    }
+
+    [HttpGet]
+    [Route("{id}")]
+    [ProducesResponseType(typeof(ResponseBillingJson), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+
+    public async Task<IActionResult> GetById([FromServices] IGetByIdBillingsUseCase useCase, long id) {
+        var response = await useCase.Execute(id);
+        if(response is not null) {
             return Ok(response);
         }
         return NotFound();
