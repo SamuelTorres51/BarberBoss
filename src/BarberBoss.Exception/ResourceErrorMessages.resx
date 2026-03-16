@@ -138,6 +138,9 @@
   <data name="NOTES_SIZE" xml:space="preserve">
     <value>As observações devem conter no máximo 500 caracteres.</value>
   </data>
+  <data name="NOT_FOUND_BILLING" xml:space="preserve">
+    <value>A cobrança não foi encontrada</value>
+  </data>
   <data name="PAYMENT_IS_VALID" xml:space="preserve">
     <value>O método de pagamento deve ser um valor válido.</value>
   </data>

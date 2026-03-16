@@ -115,6 +115,15 @@ namespace BarberBoss.Exception {
         }
         
         /// <summary>
+        ///   Consulta uma cadeia de caracteres localizada semelhante a A cobrança não foi encontrada.
+        /// </summary>
+        public static string NOT_FOUND_BILLING {
+            get {
+                return ResourceManager.GetString("NOT_FOUND_BILLING", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Consulta uma cadeia de caracteres localizada semelhante a As observações devem conter no máximo 500 caracteres..
         /// </summary>
         public static string NOTES_SIZE {
