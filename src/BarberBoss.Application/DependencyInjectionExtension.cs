@@ -4,6 +4,7 @@ using BarberBoss.Application.UseCases.Billings.Delete;
 using BarberBoss.Application.UseCases.Billings.GetAll;
 using BarberBoss.Application.UseCases.Billings.GetById;
 using BarberBoss.Application.UseCases.Billings.Register;
+using BarberBoss.Application.UseCases.Billings.Update;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace BarberBoss.Application;
@@ -23,5 +24,6 @@ public static class DependencyInjectionExtension {
         services.AddScoped<IGetAllBillingsUseCase, GetAllBillingsUseCase>();
         services.AddScoped<IGetByIdBillingsUseCase, GetByIdBillingsUseCase>();
         services.AddScoped<IDeleteBillingUseCase, DeleteBillingUseCase>();
+        services.AddScoped<IUpdateBillingUseCase, UpdateBillingUseCase>();
     }
 }

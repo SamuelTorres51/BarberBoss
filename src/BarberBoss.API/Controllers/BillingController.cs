@@ -2,6 +2,7 @@
 using BarberBoss.Application.UseCases.Billings.GetAll;
 using BarberBoss.Application.UseCases.Billings.GetById;
 using BarberBoss.Application.UseCases.Billings.Register;
+using BarberBoss.Application.UseCases.Billings.Update;
 using BarberBoss.Communication.Requests;
 using BarberBoss.Communication.Responses;
 using BarberBoss.Exception.ExceptionBase;
@@ -45,7 +46,7 @@ public class BillingController : ControllerBase {
     [ProducesResponseType(typeof(ResponseBillingJson), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
 
-    public async Task<IActionResult> GetById([FromServices] IGetByIdBillingsUseCase useCase, long id) {
+    public async Task<IActionResult> GetById([FromServices] IGetByIdBillingsUseCase useCase, [FromRoute] long id) {
         var response = await useCase.Execute(id);
         if (response is not null) {
             return Ok(response);
@@ -59,7 +60,7 @@ public class BillingController : ControllerBase {
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
 
-    public async Task<IActionResult> Delete([FromServices] IDeleteBillingUseCase useCase, long id) {
+    public async Task<IActionResult> Delete([FromServices] IDeleteBillingUseCase useCase, [FromRoute] long id) {
         try {
             await useCase.Execute(id);
             return NoContent();
@@ -71,5 +72,23 @@ public class BillingController : ControllerBase {
         }
     }
 
+    [HttpPost]
+    [Route("{id}")]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(typeof(ResponseErrorsJson), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(ResponseErrorsJson), StatusCodes.Status404NotFound)]
+
+    public async Task<IActionResult> Update([FromServices] IUpdateBillingUseCase useCase,
+                                            [FromRoute] long id,
+                                            [FromBody] RequestBillingJson request) {
+        try {
+            await useCase.Execute(id, request);
+
+            return NoContent();
+        } catch (ErrorOnValidatorException ex) {
+            var response = new ResponseErrorsJson(ex.Errors);
+            return BadRequest(response);
+        }
+    }
 
 }
