@@ -10,10 +10,10 @@ namespace BarberBoss.API.Controllers;
 public class ReportController : ControllerBase {
 
     [HttpGet("excel")]
-    [ProducesResponseType(typeof(FileContentResult) ,StatusCodes.Status200OK)]
-    [ProducesResponseType(typeof(FileContentResult) ,StatusCodes.Status404NotFound)]
+    [ProducesResponseType(typeof(FileContentResult), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(FileContentResult), StatusCodes.Status404NotFound)]
 
-    public async Task<IActionResult> GetExcel([FromServices] IGenerateBillingsReportsExcelUseCase useCase,[FromHeader] DateOnly month) {
+    public async Task<IActionResult> GetExcel([FromServices] IGenerateBillingsReportsExcelUseCase useCase, [FromHeader] DateOnly month) {
         byte[] file = await useCase.Execute(month);
         if (file.Length > 0)
             return File(file, MediaTypeNames.Application.Octet, "report.xlsx");
