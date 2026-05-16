@@ -1,14 +1,39 @@
-﻿using ClosedXML.Excel;
+﻿using BarberBoss.Domain.Repositories.Billings;
+using ClosedXML.Excel;
 
 namespace BarberBoss.Application.UseCases.Billings.Reports.Excel;
 
 public class GenerateBillingsReportsExcelUseCase : IGenerateBillingsReportsExcelUseCase {
+    private readonly IBillingReadOnlyRepository _repository;
+
+    public GenerateBillingsReportsExcelUseCase(IBillingReadOnlyRepository repository) {
+        _repository = repository;
+    }
+
     public async Task<byte[]> Execute(DateOnly month) {
+
+        var billings = await _repository.FilterByMonth(month);
+        if (billings.Count == 0) {
+            return [];
+        }
         var WorkBook = new XLWorkbook();
         ConfigureWorkBook(WorkBook);
         var worksheet = WorkBook.Worksheets.Add(month.ToString("Y"));
         InsertHeader(worksheet);
 
+        var raw = 2;
+        foreach (var billing in billings) {
+            worksheet.Cell($"A{raw}").Value = billing.ServiceName;
+            worksheet.Cell($"B{raw}").Value = billing.BarberName;
+            worksheet.Cell($"C{raw}").Value = billing.Date;
+            worksheet.Cell($"D{raw}").Value = billing.PaymentMethod.ToString();
+            worksheet.Cell($"E{raw}").Value = billing.Amount;
+            raw++;
+        }
+
+        var file = new MemoryStream();
+        WorkBook.SaveAs(file);
+        return file.ToArray();
     }
 
     private void ConfigureWorkBook(XLWorkbook WorkBook) {

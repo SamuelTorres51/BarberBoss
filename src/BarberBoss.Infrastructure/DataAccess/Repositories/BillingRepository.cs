@@ -39,4 +39,17 @@ internal class BillingRepository : IBillingWriteOnlyRepository, IBillingReadOnly
     public void Update(Billing billing) {
         _dbContext.Billings.Update(billing);
     }
+
+    public async Task<List<Billing>> FilterByMonth(DateOnly month) {
+        var startDate = new DateTime(year: month.Year, month.Month, day: 1).Date;
+        var daysInMonth = DateTime.DaysInMonth(year: month.Year, month.Month);
+        var endDate = new DateTime(year: month.Year, month.Month, day: daysInMonth, hour: 23, minute: 59, second: 59).Date;
+
+        return await _dbContext.Billings.
+            AsNoTracking().
+            Where(billing => billing.Date >= startDate && billing.Date <= endDate).
+            OrderBy(billing => billing.Date).
+            ThenBy(billing => billing.ServiceName).
+            ToListAsync();
+    }
 }
