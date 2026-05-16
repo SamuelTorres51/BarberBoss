@@ -5,6 +5,7 @@ namespace BarberBoss.Application.UseCases.Billings.Reports.Excel;
 
 public class GenerateBillingsReportsExcelUseCase : IGenerateBillingsReportsExcelUseCase {
     private readonly IBillingReadOnlyRepository _repository;
+    private const string CURRENCY_SYMBOL = "R$";
 
     public GenerateBillingsReportsExcelUseCase(IBillingReadOnlyRepository repository) {
         _repository = repository;
@@ -20,7 +21,7 @@ public class GenerateBillingsReportsExcelUseCase : IGenerateBillingsReportsExcel
         ConfigureWorkBook(WorkBook);
         var worksheet = WorkBook.Worksheets.Add(month.ToString("Y"));
         InsertHeader(worksheet);
-
+        
         var raw = 2;
         foreach (var billing in billings) {
             worksheet.Cell($"A{raw}").Value = billing.ServiceName;
@@ -28,8 +29,11 @@ public class GenerateBillingsReportsExcelUseCase : IGenerateBillingsReportsExcel
             worksheet.Cell($"C{raw}").Value = billing.Date;
             worksheet.Cell($"D{raw}").Value = billing.PaymentMethod.ToString();
             worksheet.Cell($"E{raw}").Value = billing.Amount;
+            worksheet.Cell($"E{raw}").Style.NumberFormat.Format = $"{CURRENCY_SYMBOL} #,##0.00"; //Formata a célula para exibir o valor como moeda
             raw++;
         }
+
+        worksheet.Columns().AdjustToContents();
 
         var file = new MemoryStream();
         WorkBook.SaveAs(file);
