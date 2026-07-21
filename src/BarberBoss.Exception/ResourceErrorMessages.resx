@@ -135,6 +135,12 @@
   <data name="DATE_REQUIRED" xml:space="preserve">
     <value>A data é obrigatória.</value>
   </data>
+  <data name="EMAIL_INVALID" xml:space="preserve">
+    <value>O formato do email é invalido</value>
+  </data>
+  <data name="EMAIL_REQUIRED" xml:space="preserve">
+    <value>O email é obrigatório</value>
+  </data>
   <data name="NOTES_SIZE" xml:space="preserve">
     <value>As observações devem conter no máximo 500 caracteres.</value>
   </data>
@@ -152,5 +158,8 @@
   </data>
   <data name="STATUS_IS_VALID" xml:space="preserve">
     <value>O status deve ser um valor válido.</value>
+  </data>
+  <data name="USERNAME_REQUIRED" xml:space="preserve">
+    <value>O nome é obrigatório.</value>
   </data>
 </root>

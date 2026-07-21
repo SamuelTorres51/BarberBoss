@@ -115,6 +115,24 @@ namespace BarberBoss.Exception {
         }
         
         /// <summary>
+        ///   Consulta uma cadeia de caracteres localizada semelhante a O formato do email é invalido.
+        /// </summary>
+        public static string EMAIL_INVALID {
+            get {
+                return ResourceManager.GetString("EMAIL_INVALID", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Consulta uma cadeia de caracteres localizada semelhante a O email é obrigatório.
+        /// </summary>
+        public static string EMAIL_REQUIRED {
+            get {
+                return ResourceManager.GetString("EMAIL_REQUIRED", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Consulta uma cadeia de caracteres localizada semelhante a A cobrança não foi encontrada.
         /// </summary>
         public static string NOT_FOUND_BILLING {
@@ -165,6 +183,15 @@ namespace BarberBoss.Exception {
         public static string STATUS_IS_VALID {
             get {
                 return ResourceManager.GetString("STATUS_IS_VALID", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Consulta uma cadeia de caracteres localizada semelhante a O nome é obrigatório..
+        /// </summary>
+        public static string USERNAME_REQUIRED {
+            get {
+                return ResourceManager.GetString("USERNAME_REQUIRED", resourceCulture);
             }
         }
     }
