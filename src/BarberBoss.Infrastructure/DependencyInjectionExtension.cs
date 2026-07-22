@@ -5,13 +5,16 @@ using Microsoft.EntityFrameworkCore;
 using BarberBoss.Domain.Repositories;
 using BarberBoss.Infrastructure.DataAccess.Repositories;
 using BarberBoss.Domain.Repositories.Billings;
+using BarberBoss.Domain.Security.Cryptography;
 
 namespace BarberBoss.Infrastructure;
 
 public static class DependencyInjectionExtension {
     public static void AddInfrastructure(this IServiceCollection services, IConfiguration configuration) {
-       AddRepositories(services);
-       AddDbContext(services, configuration);
+        AddRepositories(services);
+        AddDbContext(services, configuration);
+
+        services.AddScoped<IPasswordEncripter, Security.BCrypt>();
     }
 
     private static void AddRepositories(IServiceCollection services) {

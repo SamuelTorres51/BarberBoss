@@ -1,20 +1,30 @@
 ﻿using AutoMapper;
 using BarberBoss.Communication.Requests;
 using BarberBoss.Communication.Responses;
+using BarberBoss.Domain.Entities;
+using BarberBoss.Domain.Security.Cryptography;
 using BarberBoss.Exception.ExceptionBase;
 
 namespace BarberBoss.Application.UseCases.Users.Register;
 
 public class RegisterUserUseCase : IRegisterUserUseCase {
     private readonly IMapper _mapper;
+    private readonly IPasswordEncripter _passwordEncripter;
 
-    public RegisterUserUseCase(Mapper mapper) {
+    public RegisterUserUseCase(IMapper mapper, IPasswordEncripter passwordEncripter) {
         _mapper = mapper;
+        _passwordEncripter = passwordEncripter;
     }
 
 
     public Task<ResponseRegisteredUserJson> Execute(RequestRegisterUserJson request) {
         Validate(request);
+
+        var user = _mapper.Map<User>(request);
+        user.Password = _passwordEncripter.Encrypt(request.Password);
+
+
+
     }
 
     private void Validate(RequestRegisterUserJson request) {
