@@ -135,6 +135,9 @@
   <data name="DATE_REQUIRED" xml:space="preserve">
     <value>A data é obrigatória.</value>
   </data>
+  <data name="EMAIL_ALREADY_REGISTERED" xml:space="preserve">
+    <value>Esse email já foi registrado.</value>
+  </data>
   <data name="EMAIL_INVALID" xml:space="preserve">
     <value>O formato do email é invalido</value>
   </data>

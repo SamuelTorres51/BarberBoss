@@ -6,6 +6,7 @@ using BarberBoss.Domain.Repositories;
 using BarberBoss.Infrastructure.DataAccess.Repositories;
 using BarberBoss.Domain.Repositories.Billings;
 using BarberBoss.Domain.Security.Cryptography;
+using BarberBoss.Domain.Repositories.Users;
 
 namespace BarberBoss.Infrastructure;
 
@@ -21,6 +22,9 @@ public static class DependencyInjectionExtension {
         services.AddScoped<IBillingReadOnlyRepository, BillingRepository>();
         services.AddScoped<IBillingWriteOnlyRepository, BillingRepository>();
         services.AddScoped<IBillingUpdateOnlyRepository, BillingRepository>();
+
+        services.AddScoped<IUserReadOnlyRepository, UserRepository>();
+
         services.AddScoped<IUnityOfWork, UnityOfWork>();
     }
 
