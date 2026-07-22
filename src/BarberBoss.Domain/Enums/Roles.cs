@@ -2,5 +2,5 @@
 
 public static class Roles {
     public const string ADMIN = "Admin";
-    public const string BARBER = "Barber";
+    public const string TEAM_MEMBER = "TeamMember";
 }

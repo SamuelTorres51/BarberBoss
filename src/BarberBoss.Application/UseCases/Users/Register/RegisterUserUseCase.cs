@@ -2,6 +2,7 @@
 using BarberBoss.Communication.Requests;
 using BarberBoss.Communication.Responses;
 using BarberBoss.Domain.Entities;
+using BarberBoss.Domain.Repositories;
 using BarberBoss.Domain.Repositories.Users;
 using BarberBoss.Domain.Security.Cryptography;
 using BarberBoss.Exception;
@@ -14,11 +15,15 @@ public class RegisterUserUseCase : IRegisterUserUseCase {
     private readonly IMapper _mapper;
     private readonly IPasswordEncripter _passwordEncripter;
     private readonly IUserReadOnlyRepository _userReadOnlyRepository;
+    private readonly IUserWriteOnlyRepository _userWriteOnlyRepository;
+    private readonly IUnityOfWork _unityOfWork;
 
-    public RegisterUserUseCase(IMapper mapper, IPasswordEncripter passwordEncripter, IUserReadOnlyRepository repository) {
+    public RegisterUserUseCase(IMapper mapper, IPasswordEncripter passwordEncripter, IUserReadOnlyRepository repository, IUserWriteOnlyRepository writeOnlyRepository, IUnityOfWork unityOfWork) {
         _mapper = mapper;
         _passwordEncripter = passwordEncripter;
         _userReadOnlyRepository = repository;
+        _userWriteOnlyRepository = writeOnlyRepository;
+        _unityOfWork = unityOfWork;
     }
 
     public async Task<ResponseRegisteredUserJson> Execute(RequestRegisterUserJson request) {
@@ -26,9 +31,15 @@ public class RegisterUserUseCase : IRegisterUserUseCase {
 
         var user = _mapper.Map<User>(request);
         user.Password = _passwordEncripter.Encrypt(request.Password);
+        user.UserIdentifier = Guid.NewGuid();
+        await _userWriteOnlyRepository.Add(user);
+        await _unityOfWork.Commit();
 
 
-
+        return new ResponseRegisteredUserJson {
+            Name = user.Name,
+            Token = user.UserIdentifier.ToString()
+        };
     }
 
     private async Task Validate(RequestRegisterUserJson request) {
@@ -41,9 +52,9 @@ public class RegisterUserUseCase : IRegisterUserUseCase {
             result.Errors.Add(new ValidationFailure(string.Empty, ResourceErrorMessages.EMAIL_ALREADY_REGISTERED));
         }
 
-        if (result.IsValid is false) {
+        if (result.IsValid is false) {                                              
             var errorMessages = result.Errors.Select(e => e.ErrorMessage).ToList();
             throw new ErrorOnValidatorException(errorMessages);
         }
     }
-}
+}                                                           

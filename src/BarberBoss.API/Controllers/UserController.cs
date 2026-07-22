@@ -1,6 +1,7 @@
 ﻿using BarberBoss.Application.UseCases.Users.Register;
 using BarberBoss.Communication.Requests;
 using BarberBoss.Communication.Responses;
+using BarberBoss.Exception.ExceptionBase;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BarberBoss.API.Controllers;
@@ -17,8 +18,13 @@ public class UserController : ControllerBase {
         [FromBody] RequestRegisterUserJson request, 
         [FromServices] IRegisterUserUseCase useCase) 
         {
-        var reponse = await useCase.Execute(request);
+        try {
+            var response = await useCase.Execute(request);
+            return Created(String.Empty, response);
+        } catch (ErrorOnValidatorException ex) {
 
-        return Created(string.Empty, reponse);
+            var response = new ResponseErrorsJson(ex.Errors);
+            return BadRequest(response);
+        }
     }
 }
