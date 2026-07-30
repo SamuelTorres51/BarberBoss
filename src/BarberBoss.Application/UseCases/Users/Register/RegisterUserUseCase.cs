@@ -5,6 +5,7 @@ using BarberBoss.Domain.Entities;
 using BarberBoss.Domain.Repositories;
 using BarberBoss.Domain.Repositories.Users;
 using BarberBoss.Domain.Security.Cryptography;
+using BarberBoss.Domain.Security.Tokens;
 using BarberBoss.Exception;
 using BarberBoss.Exception.ExceptionBase;
 using FluentValidation.Results;
@@ -17,13 +18,15 @@ public class RegisterUserUseCase : IRegisterUserUseCase {
     private readonly IUserReadOnlyRepository _userReadOnlyRepository;
     private readonly IUserWriteOnlyRepository _userWriteOnlyRepository;
     private readonly IUnityOfWork _unityOfWork;
+    private readonly IAccessTokenGeneration _tokenGeneration;
 
-    public RegisterUserUseCase(IMapper mapper, IPasswordEncripter passwordEncripter, IUserReadOnlyRepository repository, IUserWriteOnlyRepository writeOnlyRepository, IUnityOfWork unityOfWork) {
+    public RegisterUserUseCase(IMapper mapper, IPasswordEncripter passwordEncripter, IUserReadOnlyRepository repository, IUserWriteOnlyRepository writeOnlyRepository, IUnityOfWork unityOfWork, IAccessTokenGeneration tokenGeneration) {
         _mapper = mapper;
         _passwordEncripter = passwordEncripter;
         _userReadOnlyRepository = repository;
         _userWriteOnlyRepository = writeOnlyRepository;
         _unityOfWork = unityOfWork;
+        _tokenGeneration = tokenGeneration;
     }
 
     public async Task<ResponseRegisteredUserJson> Execute(RequestRegisterUserJson request) {
@@ -38,7 +41,7 @@ public class RegisterUserUseCase : IRegisterUserUseCase {
 
         return new ResponseRegisteredUserJson {
             Name = user.Name,
-            Token = user.UserIdentifier.ToString()
+            Token = _tokenGeneration.Generate(user)
         };
     }
 
