@@ -5,7 +5,7 @@ using BarberBoss.Domain.Repositories.Users;
 using BarberBoss.Domain.Security.Cryptography;
 using BarberBoss.Domain.Security.Tokens;
 using BarberBoss.Exception.ExceptionBase;
-using Microsoft.IdentityModel.Tokens.Experimental;
+
 
 namespace BarberBoss.Application.UseCases.Users.Login;
 
@@ -20,8 +20,8 @@ public class DoLoginUseCase : IDoLoginUseCase {
         _passwordEncripter = passwordEncripter;
     }
 
-    public Task<ResponseRegisteredUserJson> Execute(RequestLoginJson request) {
-        var user = _repository.GetByEmail(request.Email);
+    public async Task<ResponseRegisteredUserJson> Execute(RequestLoginJson request) {
+        var user = await _repository.GetUserByEmail(request.Email);
 
         List<string> error = ["Email or password is incorrect."];
 
@@ -31,8 +31,13 @@ public class DoLoginUseCase : IDoLoginUseCase {
 
         var passwordIsValid = _passwordEncripter.Verify(request.Password, user.Password);
 
-        if(passwordIsValid == false) {
+        if (passwordIsValid == false) {
             throw new ErrorOnValidatorException(error);
         }
+
+        return new ResponseRegisteredUserJson {
+            Name = user.Name,
+            Token = _accessTokenGenerator.Generate(user)
+        };
     }
 }
