@@ -1,6 +1,8 @@
 using BarberBoss.Application;
 using BarberBoss.Infrastructure;
 using BarberBoss.Infrastructure.Migrations;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -14,6 +16,19 @@ builder.Services.AddSwaggerGen();
 builder.Services.Configure<RouteOptions>(options => options.LowercaseUrls = true);
 builder.Services.AddApplication();
 builder.Services.AddInfrastructure(builder.Configuration);
+var signingKey = builder.Configuration.GetValue<string>("Settings:Jwt:SigningKey");
+
+builder.Services.AddAuthentication(config => {
+    config.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    config.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+}).AddJwtBearer(config => {
+    config.TokenValidationParameters = new TokenValidationParameters {
+        ValidateIssuer = false,
+        ValidateAudience = false,
+        ClockSkew = TimeSpan.Zero,
+        IssuerSigningKey = new SymmetricSecurityKey(System.Text.Encoding.UTF8.GetBytes(signingKey!))
+    };
+});
 
 var app = builder.Build();
 
@@ -26,6 +41,7 @@ if (app.Environment.IsDevelopment()) {
 
 app.UseHttpsRedirection();
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
