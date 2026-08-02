@@ -6,17 +6,20 @@ using BarberBoss.Application.UseCases.Billings.Update;
 using BarberBoss.Communication.Requests;
 using BarberBoss.Communication.Responses;
 using BarberBoss.Exception.ExceptionBase;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BarberBoss.API.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
+[Authorize]
+
 public class BillingController : ControllerBase {
 
     [HttpPost]
     [ProducesResponseType(typeof(ResponseRegistedBillingJson), StatusCodes.Status201Created)]
-    [ProducesResponseType(typeof(ResponseErrorsJson), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(ResponseErrorsJson), StatusCodes.Status400BadRequest)
 
     public async Task<IActionResult> Register([FromServices] IRegisterBillingUseCase useCase, [FromBody] RequestBillingJson request) {
         try {

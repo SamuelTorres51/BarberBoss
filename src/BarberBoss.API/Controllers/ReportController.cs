@@ -1,5 +1,6 @@
 ﻿using BarberBoss.Application.UseCases.Billings.Reports.Excel;
 using BarberBoss.Communication.Requests;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Net.Mime;
 
@@ -7,6 +8,8 @@ namespace BarberBoss.API.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
+[Authorize]
+
 public class ReportController : ControllerBase {
 
     [HttpGet("excel")]
