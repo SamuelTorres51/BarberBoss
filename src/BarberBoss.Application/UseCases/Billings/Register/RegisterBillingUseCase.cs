@@ -5,6 +5,7 @@ using BarberBoss.Domain.Repositories;
 using BarberBoss.Domain.Repositories.Billings;
 using BarberBoss.Exception.ExceptionBase;
 using BarberBoss.Domain.Entities;
+using BarberBoss.Domain.Serv_ices.LoggedUser;
 
 namespace BarberBoss.Application.UseCases.Billings.Register;
 
@@ -12,17 +13,20 @@ public class RegisterBillingUseCase : IRegisterBillingUseCase {
     private readonly IBillingWriteOnlyRepository _repository;
     private readonly IUnityOfWork _unityOfWork;
     private readonly IMapper _mapper;
+    private readonly ILoggedUser _loggedUser;
 
-    public RegisterBillingUseCase(IBillingWriteOnlyRepository repository, IUnityOfWork unityOfWork, IMapper mapper) {
+    public RegisterBillingUseCase(IBillingWriteOnlyRepository repository, IUnityOfWork unityOfWork, IMapper mapper, ILoggedUser loggedUser) {
         _repository = repository;
         _unityOfWork = unityOfWork;
         _mapper = mapper;
+        _loggedUser = loggedUser;
     }
 
 
     public async Task<ResponseRegistedBillingJson> Execute(RequestBillingJson request) {
         Validate(request);
         var entity = _mapper.Map<Billing>(request);
+        entity.UserId = await _loggedUser.Get();
         await _repository.Add(entity);
         await _unityOfWork.Commit();
         var response = _mapper.Map<ResponseRegistedBillingJson>(entity);

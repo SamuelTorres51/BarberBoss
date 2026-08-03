@@ -9,6 +9,8 @@ using BarberBoss.Domain.Security.Cryptography;
 using BarberBoss.Domain.Repositories.Users;
 using BarberBoss.Domain.Security.Tokens;
 using BarberBoss.Infrastructure.Security.Tokens;
+using BarberBoss.Infrastructure.Services.LoggedUser;
+using BarberBoss.Domain.Serv_ices.LoggedUser;
 
 namespace BarberBoss.Infrastructure;
 
@@ -19,6 +21,7 @@ public static class DependencyInjectionExtension {
         AddToken(services, configuration);
 
         services.AddScoped<IPasswordEncripter, Security.Cryptography.BCrypt>();
+        services.AddScoped<ILoggedUser, LoggedUser>();
     }
 
     private static void AddToken(IServiceCollection services, IConfiguration configuration) {

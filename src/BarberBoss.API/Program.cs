@@ -1,4 +1,6 @@
+using BarberBoss.API.Token;
 using BarberBoss.Application;
+using BarberBoss.Domain.Security.Tokens;
 using BarberBoss.Infrastructure;
 using BarberBoss.Infrastructure.Migrations;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -29,6 +31,10 @@ builder.Services.AddSwaggerGen(config =>
 builder.Services.Configure<RouteOptions>(options => options.LowercaseUrls = true);
 builder.Services.AddApplication();
 builder.Services.AddInfrastructure(builder.Configuration);
+
+builder.Services.AddScoped<ITokenProvider, HttpContextTokenValue>();
+builder.Services.AddHttpContextAccessor();
+
 var signingKey = builder.Configuration.GetValue<string>("Settings:Jwt:SigningKey");
 
 builder.Services.AddAuthentication(config =>
