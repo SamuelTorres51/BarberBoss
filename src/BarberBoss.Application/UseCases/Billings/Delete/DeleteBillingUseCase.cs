@@ -23,14 +23,14 @@ public class DeleteBillingUseCase : IDeleteBillingUseCase{
 
         var loggedUser = await _loggedUser.Get();
 
-        var billing = await _billingReadOnly.GetById(loggedUser, id);
+        var billing = await _billingReadOnly.GetById(loggedUser!, id);
 
         if (billing is null) {
             throw new NotFoundException(ResourceErrorMessages.NOT_FOUND_BILLING);
 
         }
 
-        var result = await _repository.Delete(id);
+        await _repository.Delete(id);
         
         await _unityOfWork.Commit();
     }
