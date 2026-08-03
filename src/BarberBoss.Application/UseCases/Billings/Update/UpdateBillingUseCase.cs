@@ -2,6 +2,7 @@
 using BarberBoss.Communication.Requests;
 using BarberBoss.Domain.Repositories;
 using BarberBoss.Domain.Repositories.Billings;
+using BarberBoss.Domain.Serv_ices.LoggedUser;
 using BarberBoss.Exception;
 using BarberBoss.Exception.ExceptionBase;
 
@@ -11,16 +12,21 @@ public class UpdateBillingUseCase : IUpdateBillingUseCase{
     private readonly IBillingUpdateOnlyRepository _repository;
     private readonly IUnityOfWork _unityOfWork;
     private readonly IMapper _mapper;
+    private readonly ILoggedUser _loggedUser;
 
-    public UpdateBillingUseCase(IBillingUpdateOnlyRepository repository, IUnityOfWork unityOfWork, IMapper mapper) {
+    public UpdateBillingUseCase(IBillingUpdateOnlyRepository repository, IUnityOfWork unityOfWork, IMapper mapper, ILoggedUser loggedUser) {
         _repository = repository;
         _mapper = mapper;
         _unityOfWork = unityOfWork;
+        _loggedUser = loggedUser;
     }
 
     public async Task Execute(long id, RequestBillingJson request) {
         Validate(request);
-        var billing = await _repository.GetById(id);
+        var loggedUser = await _loggedUser.Get();
+
+        var billing = await _repository.GetById(loggedUser!, id);
+
         if (billing is null) {
             throw new NotFoundException(ResourceErrorMessages.NOT_FOUND_BILLING);
         }

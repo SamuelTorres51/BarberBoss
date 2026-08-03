@@ -4,6 +4,6 @@ namespace BarberBoss.Domain.Repositories.Billings;
 
 public interface IBillingReadOnlyRepository {
     Task<List<Billing>> GetAll();
-    Task<Billing?> GetById(long id);
+    Task<Billing?> GetById(Entities.User user, long id);
     Task<List<Billing>> FilterByMonth(DateOnly date);
 }

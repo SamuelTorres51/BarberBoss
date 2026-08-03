@@ -23,17 +23,16 @@ internal class BillingRepository : IBillingWriteOnlyRepository, IBillingReadOnly
         return await _dbContext.Billings.AsNoTracking().FirstOrDefaultAsync(b => b.Id == id);
     }
 
-    async Task<Billing?> IBillingUpdateOnlyRepository.GetById(long id) {
-        return await _dbContext.Billings.FirstOrDefaultAsync(b => b.Id == id);
+    async Task<Billing?> IBillingUpdateOnlyRepository.GetById(User user, long id) {
+        return await _dbContext.Billings.FirstOrDefaultAsync(b => b.Id == id && b.UserId == user.Id);
     }
 
-    public async Task<bool> Delete(long id) { 
-        var billing = await _dbContext.Billings.FirstOrDefaultAsync(b => b.Id == id);
-        if(billing is null) {
-            return false;
-        }
+    public async Task Delete(long id) {
+
+        var billing = await _dbContext.Billings.FirstAsync(b => b.Id == id);
+        
         _dbContext.Billings.Remove(billing);
-        return true;
+        
     }
 
     public void Update(Billing billing) {

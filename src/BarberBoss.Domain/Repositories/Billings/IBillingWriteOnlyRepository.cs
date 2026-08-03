@@ -4,5 +4,5 @@ namespace BarberBoss.Domain.Repositories.Billings;
 
 public interface IBillingWriteOnlyRepository {
     Task Add(Billing billing);
-    Task<bool> Delete(long id);
+    Task Delete(long id);
 }
