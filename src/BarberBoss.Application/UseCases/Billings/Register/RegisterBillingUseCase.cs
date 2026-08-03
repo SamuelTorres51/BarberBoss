@@ -25,11 +25,17 @@ public class RegisterBillingUseCase : IRegisterBillingUseCase {
 
     public async Task<ResponseRegistedBillingJson> Execute(RequestBillingJson request) {
         Validate(request);
-        var entity = _mapper.Map<Billing>(request);
-        entity.UserId = await _loggedUser.Get();
-        await _repository.Add(entity);
+
+        var loggedUserId = await _loggedUser.Get();
+        var expense = _mapper.Map<Billing>(request);
+
+        if(loggedUserId is not null) {
+            expense.UserId = loggedUserId.Id;
+        }
+        
+        await _repository.Add(expense);
         await _unityOfWork.Commit();
-        var response = _mapper.Map<ResponseRegistedBillingJson>(entity);
+        var response = _mapper.Map<ResponseRegistedBillingJson>(expense);
         return response;
     }
 

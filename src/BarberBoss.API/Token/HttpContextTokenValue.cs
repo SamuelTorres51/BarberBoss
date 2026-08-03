@@ -3,15 +3,15 @@
 namespace BarberBoss.API.Token;
 
 public class HttpContextTokenValue : ITokenProvider {
-    private readonly HttpContextAccessor _httpContext;
+    private readonly IHttpContextAccessor _httpContext;
 
-    public HttpContextTokenValue(HttpContextAccessor httpContext) {
+    public HttpContextTokenValue(IHttpContextAccessor httpContext) {
         _httpContext = httpContext;
     }
 
     public string TokenOnRequest() {
         var authorization = _httpContext.HttpContext!.Request.Headers.Authorization.ToString();
 
-        return 
+        return authorization["Bearer ".Length..].Trim();
     }
 }
