@@ -23,5 +23,6 @@ public class AutoMapping : Profile{
         CreateMap<Billing, ResponseRegistedBillingJson>();
         CreateMap<Billing, ResponseShortBillingJson>();
         CreateMap<Billing, ResponseBillingJson>();
+        CreateMap<User, ResponseUserProfileJson>();
     }
 }

@@ -1,7 +1,9 @@
-﻿using BarberBoss.Application.UseCases.Users.Register;
+﻿using BarberBoss.Application.UseCases.Users.GetProfile;
+using BarberBoss.Application.UseCases.Users.Register;
 using BarberBoss.Communication.Requests;
 using BarberBoss.Communication.Responses;
 using BarberBoss.Exception.ExceptionBase;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BarberBoss.API.Controllers;
@@ -26,5 +28,16 @@ public class UserController : ControllerBase {
             var response = new ResponseErrorsJson(ex.Errors);
             return BadRequest(response);
         }
+    }
+
+    [HttpGet]
+    [ProducesResponseType(typeof(ResponseUserProfileJson), StatusCodes.Status200OK)]
+    [Authorize]
+
+    public async Task<IActionResult> GetProfile([FromServices] IGetUserProfileUseCase useCase) {
+
+        var response = await useCase.Execute();
+
+        return Ok(response);
     }
 }
