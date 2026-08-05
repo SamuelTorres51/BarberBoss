@@ -30,4 +30,10 @@ internal class UserRepository : IUserReadOnlyRepository, IUserWriteOnlyRepositor
     public void Update(User user) {
         _dbContext.Users.Update(user);
     }
+
+    public async Task Delete(User user){
+        var userId = user.Id;
+        var userToRemove = await _dbContext.Users.FirstAsync(users => users.Id == userId);
+        _dbContext.Users.Remove(userToRemove);
+    }
 }

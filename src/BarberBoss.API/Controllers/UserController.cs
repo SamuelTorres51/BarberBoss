@@ -1,4 +1,6 @@
-﻿using BarberBoss.Application.UseCases.Users.ChangePassword;
+﻿using BarberBoss.Application.UseCases.Billings.Delete;
+using BarberBoss.Application.UseCases.Users.ChangePassword;
+using BarberBoss.Application.UseCases.Users.Delete;
 using BarberBoss.Application.UseCases.Users.GetProfile;
 using BarberBoss.Application.UseCases.Users.Register;
 using BarberBoss.Application.UseCases.Users.Update;
@@ -72,5 +74,15 @@ public class UserController : ControllerBase {
             var response = new ResponseErrorsJson(ex.Errors);
             return BadRequest(response);
         }
+    }
+
+    [HttpDelete]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [Authorize]
+
+    public async Task<IActionResult> Delete([FromServices] IDeleteUserAccountUseCase useCase) {
+        
+        await useCase.Execute();
+        return NoContent();
     }
 }
