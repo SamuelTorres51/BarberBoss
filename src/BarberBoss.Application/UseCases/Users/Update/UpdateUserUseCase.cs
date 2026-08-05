@@ -6,6 +6,7 @@ using BarberBoss.Domain.Repositories.Users;
 using BarberBoss.Domain.Serv_ices.LoggedUser;
 using BarberBoss.Exception;
 using BarberBoss.Exception.ExceptionBase;
+using DocumentFormat.OpenXml.Spreadsheet;
 using FluentValidation.Results;
 
 namespace BarberBoss.Application.UseCases.Users.Update;
@@ -28,21 +29,22 @@ public class UpdateUserUseCase : IUpdateUserUseCase {
 
     public async Task Execute(RequestUpdateUserJson request) {
         var loggedUser = await _loggedUser.Get();
-        await Validate(request, loggedUser!);
+        await Validate(request, loggedUser!.Email);
 
-       
-        _mapper.Map(request, loggedUser);
-        _repository.Update(loggedUser!);
+        var user = await _repository.GetById(loggedUser.Id);
+
+        _mapper.Map(request, user);
+        _repository.Update(user);
         await _unityOfWork.Commit();
 
     }
 
-    private async Task Validate(RequestUpdateUserJson request, User loggedUser) {
+    private async Task Validate(RequestUpdateUserJson request, string currentEmail) {
         var result = new UpdateUserValidator().Validate(request);
 
         var emailExists = await _readOnlyRepository.ExistActiveUserWithEmail(request.Email);
 
-        if (emailExists && request.Email != loggedUser.Email) {
+        if (emailExists && request.Email != currentEmail) {
             result.Errors.Add(new ValidationFailure(string.Empty, ResourceErrorMessages.EMAIL_ALREADY_REGISTERED));
         }
 
