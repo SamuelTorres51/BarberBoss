@@ -169,6 +169,15 @@ namespace BarberBoss.Exception {
         }
         
         /// <summary>
+        ///   Consulta uma cadeia de caracteres localizada semelhante a A senha inserida é diferente da senha atual..
+        /// </summary>
+        public static string PASSWORD_DIFFERENT_CURRENT {
+            get {
+                return ResourceManager.GetString("PASSWORD_DIFFERENT_CURRENT", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Consulta uma cadeia de caracteres localizada semelhante a O método de pagamento deve ser um valor válido..
         /// </summary>
         public static string PAYMENT_IS_VALID {

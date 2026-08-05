@@ -1,4 +1,5 @@
-﻿using BarberBoss.Application.UseCases.Users.GetProfile;
+﻿using BarberBoss.Application.UseCases.Users.ChangePassword;
+using BarberBoss.Application.UseCases.Users.GetProfile;
 using BarberBoss.Application.UseCases.Users.Register;
 using BarberBoss.Application.UseCases.Users.Update;
 using BarberBoss.Communication.Requests;
@@ -48,6 +49,22 @@ public class UserController : ControllerBase {
     [Authorize]
 
     public async Task<IActionResult> Update([FromBody] RequestUpdateUserJson request, [FromServices] IUpdateUserUseCase useCase) {
+        try {
+            await useCase.Execute(request);
+            return NoContent();
+        } catch (ErrorOnValidatorException ex) {
+            var response = new ResponseErrorsJson(ex.Errors);
+            return BadRequest(response);
+        }
+    }
+
+
+    [HttpPut("change-password")]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(typeof(ResponseErrorsJson), StatusCodes.Status400BadRequest)]
+    [Authorize]
+
+    public async Task<IActionResult> ChangePassword([FromBody] RequestChangePasswordJson request, [FromServices] IChangeUserPasswordUseCase useCase) {
         try {
             await useCase.Execute(request);
             return NoContent();
