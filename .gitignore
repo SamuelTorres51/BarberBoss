@@ -366,3 +366,4 @@ appsettings.Development.json
 .env
 /src/BarberBoss.API/appsettings.json
 /src/BarberBoss.API/appsettings.Development.json
+/src/BarberBoss.API/appsettings.Production.json
